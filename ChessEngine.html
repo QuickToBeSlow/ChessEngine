@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<canvas id="Canvas" width="400px" height="400px"></canvas>
+
+<body>
+    <script>
+        var turn = 0;
+        var iteration = 0;
+        var x = 0;
+        var y = 0;
+        document.onmousedown = MouseDown;
+        var color1 = "rgb(127,63,0)";
+        var color2 = "rgb(63,63,63)";
+        var c = document.getElementById("Canvas");
+        var ctx = c.getContext("2d");
+        ctx.font = "12px Arial";
+        var positions = [];
+        var possiblemoves = [];
+
+        function resetboard() {
+            possiblemoves = [];
+            positions = [];
+            while (positions.length < 64) {
+                positions.push(0);
+            }
+            positions[0] = -5;
+            positions[1] = -3;
+            positions[2] = -3.1;
+            positions[3] = -9;
+            positions[4] = -500;
+            positions[5] = -3.1;
+            positions[6] = -3;
+            positions[7] = -5;
+            positions[8] = -1;
+            positions[9] = -1;
+            positions[10] = -1;
+            positions[11] = -1;
+            positions[12] = -1;
+            positions[13] = -1;
+            positions[14] = -1;
+            positions[15] = -1;
+            positions[56] = 5;
+            positions[57] = 3;
+            positions[58] = 3.1;
+            positions[59] = 9;
+            positions[60] = 500;
+            positions[61] = 3.1;
+            positions[62] = 3;
+            positions[63] = 5;
+            positions[48] = 1;
+            positions[49] = 1;
+            positions[50] = 1;
+            positions[51] = 1;
+            positions[52] = 1;
+            positions[53] = 1;
+            positions[54] = 1;
+            positions[55] = 1;
+        }
+        resetboard();
+
+        function drawboard() {
+            for (var i = 0; i < 64; i++) {
+                if (i % 2 === 0) {
+                    if (Math.floor(i / 8) % 2 === 0) {
+                        color1 = "rgb(63,63,63)";
+                        color2 = "rgb(127,63,0)";
+                    } else {
+                        color1 = "rgb(127,63,0)";
+                        color2 = "rgb(63,63,63)";
+                    }
+                    ctx.fillStyle = color1;
+                } else {
+                    ctx.fillStyle = color2;
+                }
+                ctx.fillRect((i % 8) * 50, (Math.floor(i / 8)) * 50, 50, 50);
+            }
+            for (var j = 0; j <= 63; j++) {
+                if (positions[j] === 1) {
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.fillText("P", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === -1) {
+                    ctx.fillStyle = "rgb(0,0,0)";
+                    ctx.fillText("P", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === -3) {
+                    ctx.fillStyle = "rgb(0,0,0)";
+                    ctx.fillText("N", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === 3) {
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.fillText("N", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === -3.1) {
+                    ctx.fillStyle = "rgb(0,0,0)";
+                    ctx.fillText("B", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === 3.1) {
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.fillText("B", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === -5) {
+                    ctx.fillStyle = "rgb(0,0,0)";
+                    ctx.fillText("R", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === 5) {
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.fillText("R", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === -9) {
+                    ctx.fillStyle = "rgb(0,0,0)";
+                    ctx.fillText("Q", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === 9) {
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.fillText("Q", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === -500) {
+                    ctx.fillStyle = "rgb(0,0,0)";
+                    ctx.fillText("K", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                } else if (positions[j] === 500) {
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.fillText("K", (j % 8) * 50 + 22, Math.floor(j / 8) * 50 + 30);
+                }
+            }
+        }
+        drawboard();
+
+        function PossibleMovesfun() {
+            for (var i = 0; i < positions.length; i++) {
+                if (turn === 0) {
+                    if (positions[i] === 500) {
+                        if (positions[i - 8] <= 0) {
+                            possiblemoves.push([i, i - 8]);
+                        }
+                        if (positions[i + 8] <= 0) {
+                            possiblemoves.push([i, i + 8]);
+                        }
+                        if (positions[i + 1] <= 0) {
+                            possiblemoves.push([i, i + 1]);
+                        }
+                        if (positions[i - 1] <= 0) {
+                            possiblemoves.push([i, i - 1]);
+                        }
+                        if (positions[i - 7] <= 0 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0) {
+                            possiblemoves.push([i, i - 7]);
+                        }
+                        if (positions[i - 9] <= 0 && Math.abs((i % 8) - ((i - 9) % 8)) > 0 && Math.abs((i % 8) - ((i - 9) % 8)) < 2) {
+                            possiblemoves.push([i, i - 9]);
+                        }
+                        if (positions[i + 9] <= 0 && Math.abs((i % 8) - ((i + 9) % 8)) > 0 && Math.abs((i % 8) - ((i + 9) % 8)) < 2) {
+                            possiblemoves.push([i, i + 9]);
+                        }
+                        if (positions[i + 7] <= 0 && Math.abs((i % 8) - ((i + 7) % 8)) < 2 && Math.abs((i % 8) - ((i + 7) % 8)) > 0) {
+                            possiblemoves.push([i, i + 7]);
+                        }
+                    }
+                    if (positions[i] === 9) {
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i - j) % 8 === 0 || i - j < 0 || i - j > 63 || (i - j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 72;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i + j) % 8 === 0 || i + j < 0 || i + j > 63 || (i + j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 72;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i - j) % 8 === 0 || i - j < 0 || i - j > 63 || (i - j) % 8 === 7) {
+                                j = 99;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 99;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 99;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i + j) % 8 === 0 || i + j < 0 || i + j > 63 || (i + j) % 8 === 7) {
+                                j = 99;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 99;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 99;
+                            }
+                        }
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i - j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0 && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i - j] === 0 && j !== null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i + j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0 && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i + j] === 0 && j !== null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 64;
+                            }
+                        }
+                    }
+                    if (positions[i] === 3) {
+                        if (i - 17 > 0 && i % 8 != 7) {
+                            if (positions[i - 17] <= 0) {
+                                possiblemoves.push([i, i - 17]);
+                            }
+                        }
+                        if (i - 15 > 0 && i % 8 != 0) {
+                            if (positions[i - 15] <= 0) {
+                                possiblemoves.push([i, i - 15]);
+                            }
+                        }
+                        if (i - 10 > 0 && i % 8 != 0 && i % 8 != 1) {
+                            if (positions[i - 10] <= 0) {
+                                possiblemoves.push([i, i - 10]);
+                            }
+                        }
+                        if (i - 6 > 0 && i % 8 != 7 && i % 8 != 6) {
+                            if (positions[i - 6] <= 0) {
+                                possiblemoves.push([i, i - 6]);
+                            }
+                        }
+                        if (i + 17 < 63 && i % 8 != 7) {
+                            if (positions[i + 17] <= 0) {
+                                possiblemoves.push([i, i + 17]);
+                            }
+                        }
+                        if (i + 15 < 63 && i % 8 != 0) {
+                            if (positions[i + 15] <= 0) {
+                                possiblemoves.push([i, i + 15]);
+                            }
+                        }
+                        if (i + 10 < 63 && i % 8 != 6 && i % 8 != 7) {
+                            if (positions[i + 10] <= 0) {
+                                possiblemoves.push([i, i + 10]);
+                            }
+                        }
+                        if (i + 6 < 63 && i % 8 != 0 && i % 8 != 1) {
+                            if (positions[i + 6] <= 0) {
+                                possiblemoves.push([i, i + 6]);
+                            }
+                        }
+                    }
+                    if (positions[i] === 3.1) {
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i - j) % 8 === 0 || i - j < 0 || i - j > 63 || (i - j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 72;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i + j) % 8 === 0 || i + j < 0 || i + j > 63 || (i + j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 72;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i - j) % 8 === 0 || i - j < 0 || i - j > 63 || (i - j) % 8 === 7) {
+                                j = 99;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 99;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 99;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i + j) % 8 === 0 || i + j < 0 || i + j > 63 || (i + j) % 8 === 7) {
+                                j = 99;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 99;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 99;
+                            }
+                        }
+                    }
+                    if (positions[i] === 5) {
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i - j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0 && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i - j] === 0 && j !== null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] < 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] > 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i + j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0 && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i + j] === 0 && j !== null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] < 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] > 0) {
+                                j = 64;
+                            }
+                        }
+                    }
+                    if (positions[i] === 1) {
+                        if (positions[i - 8] === 0) {
+                            possiblemoves.push([i, i - 8]);
+                        }
+                        if (positions[i - 16] === 0 && Math.floor(i / 8) === 6 && positions[i - 8] === 0) {
+                            possiblemoves.push([i, i - 16]);
+                        }
+                        if (positions[i - 7] < 0 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0) {
+                            possiblemoves.push([i, i - 7]);
+                        }
+                        if (positions[i - 9] < 0 && Math.abs((i % 8) - ((i - 9) % 8)) > 0 && Math.abs((i % 8) - ((i - 9) % 8)) < 2) {
+                            possiblemoves.push([i, i - 9]);
+                        }
+                    }
+                } else {
+                    if (positions[i] === -500) {
+                        if (positions[i - 8] >= 0) {
+                            possiblemoves.push([i, i - 8]);
+                        }
+                        if (positions[i + 8] >= 0) {
+                            possiblemoves.push([i, i + 8]);
+                        }
+                        if (positions[i + 1] >= 0) {
+                            possiblemoves.push([i, i + 1]);
+                        }
+                        if (positions[i - 1] >= 0) {
+                            possiblemoves.push([i, i - 1]);
+                        }
+                        if (positions[i - 7] >= 0 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0) {
+                            possiblemoves.push([i, i - 7]);
+                        }
+                        if (positions[i - 9] >= 0 && Math.abs((i % 8) - ((i - 9) % 8)) > 0 && Math.abs((i % 8) - ((i - 9) % 8)) < 2) {
+                            possiblemoves.push([i, i - 9]);
+                        }
+                        if (positions[i + 9] >= 0 && Math.abs((i % 8) - ((i + 9) % 8)) > 0 && Math.abs((i % 8) - ((i + 9) % 8)) < 2) {
+                            possiblemoves.push([i, i + 9]);
+                        }
+                        if (positions[i + 7] >= 0 && Math.abs((i % 8) - ((i + 7) % 8)) < 2 && Math.abs((i % 8) - ((i + 7) % 8)) > 0) {
+                            possiblemoves.push([i, i + 7]);
+                        }
+                    }
+                    if (positions[i] === -9) {
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i - j) % 8 === 0 || i - j < 0 || i - j > 63 || (i - j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 72;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i + j) % 8 === 0 || i + j < 0 || i + j > 63 || (i + j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 72;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i - j) % 8 === 7 || i - j < 0 || i - j > 63 || (i - j) % 8 === 0) {
+                                j = 99;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 99;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 99;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i + j) % 8 === 7 || i + j < 0 || i + j > 63 || (i + j) % 8 === 0) {
+                                j = 99;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] > 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 99;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 99;
+                            }
+                        }
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i - j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0 && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i - j] === 0 && j !== null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i + j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] > 0 && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i + j] === 0 && j !== null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] > 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 64;
+                            }
+                        }
+                    }
+                    if (positions[i] === -3) {
+                        if (i - 17 > 0 && i % 8 != 7) {
+                            if (positions[i - 17] >= 0) {
+                                possiblemoves.push([i, i - 17]);
+                            }
+                        }
+                        if (i - 15 > 0 && i % 8 != 0) {
+                            if (positions[i - 15] >= 0) {
+                                possiblemoves.push([i, i - 15]);
+                            }
+                        }
+                        if (i - 10 > 0 && i % 8 != 0 && i % 8 != 1) {
+                            if (positions[i - 10] >= 0) {
+                                possiblemoves.push([i, i - 10]);
+                            }
+                        }
+                        if (i - 6 > 0 && i % 8 != 7 && i % 8 != 6) {
+                            if (positions[i - 6] >= 0) {
+                                possiblemoves.push([i, i - 6]);
+                            }
+                        }
+                        if (i + 17 < 63 && i % 8 != 7) {
+                            if (positions[i + 17] >= 0) {
+                                possiblemoves.push([i, i + 17]);
+                            }
+                        }
+                        if (i + 15 < 63 && i % 8 != 0) {
+                            if (positions[i + 15] >= 0) {
+                                possiblemoves.push([i, i + 15]);
+                            }
+                        }
+                        if (i + 10 < 63 && i % 8 != 6 && i % 8 != 7) {
+                            if (positions[i + 10] >= 0) {
+                                possiblemoves.push([i, i + 10]);
+                            }
+                        }
+                        if (i + 6 < 63 && i % 8 != 0 && i % 8 != 1) {
+                            if (positions[i + 6] >= 0) {
+                                possiblemoves.push([i, i + 6]);
+                            }
+                        }
+                    }
+                    if (positions[i] === -3.1) {
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i - j) % 8 === 0 || i - j < 0 || i - j > 63 || (i - j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 72;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 9; j < 72; j += 9) {
+                            if ((i + j) % 8 === 0 || i + j < 0 || i + j > 63 || (i + j) % 8 === 7) {
+                                j = 72;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 72;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 72;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i - j) % 8 === 7 || i - j < 0 || i - j > 63 || (i - j) % 8 === 0) {
+                                j = 99;
+                            }
+                            if (positions[i - j] === 0 && j != null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 99;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 99;
+                            }
+                        }
+                        for (var j = 7; j < 56; j += 7) {
+                            if ((i + j) % 8 === 7 || i + j < 0 || i + j > 63 || (i + j) % 8 === 0) {
+                                j = 99;
+                            }
+                            if (positions[i + j] === 0 && j != null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] > 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 99;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 99;
+                            }
+                        }
+                    }
+                    if (positions[i] === -5) {
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i - j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0 && Math.floor(i / 8) === Math.floor((i - j) / 8)) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i - j] === 0 && j !== null) {
+                                possiblemoves.push([i, i - j]);
+                            } else if (j != null && positions[i - j] > 0) {
+                                possiblemoves.push([i, i - j]);
+                                j = 64;
+                            } else if (j != null && positions[i - j] < 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 1; j < 8; j++) {
+                            if (positions[i + j] === 0 && j !== null && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] > 0 && Math.floor(i / 8) === Math.floor((i + j) / 8)) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 64;
+                            }
+                        }
+                        for (var j = 8; j < 64; j += 8) {
+                            if (positions[i + j] === 0 && j !== null) {
+                                possiblemoves.push([i, i + j]);
+                            } else if (j != null && positions[i + j] > 0) {
+                                possiblemoves.push([i, i + j]);
+                                j = 64;
+                            } else if (j != null && positions[i + j] < 0) {
+                                j = 64;
+                            }
+                        }
+                    }
+                    if (positions[i] === -1) {
+                        if (positions[i + 8] === 0) {
+                            possiblemoves.push([i, i + 8]);
+                        }
+                        if (positions[i + 16] === 0 && Math.floor(i / 8) === 1 && positions[i + 8] === 0) {
+                            possiblemoves.push([i, i + 16]);
+                        }
+                        if (positions[i + 7] > 0 && Math.abs((i % 8) - ((i + 7) % 8)) < 2 && Math.abs((i % 8) - ((i + 7) % 8)) > 0) {
+                            possiblemoves.push([i, i + 7]);
+                        }
+                        if (positions[i + 9] > 0 && Math.abs((i % 8) - ((i + 9) % 8)) > 0 && Math.abs((i % 8) - ((i + 9) % 8)) < 2) {
+                            possiblemoves.push([i, i + 9]);
+                        }
+                    }
+                }
+            }
+            //console.log(possiblemoves);
+        }
+        PossibleMovesfun();
+
+        function ChooseMove() {
+            var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
+            if (possiblemoves.length > 0) {
+                positions[possiblemoves[hideousvariable][1]] = positions[possiblemoves[hideousvariable][0]];
+                positions[possiblemoves[hideousvariable][0]] = 0;
+            }
+            drawboard();
+            possiblemoves = [];
+        }
+
+        function MousePosition(event) {
+            event = event || window.event;
+            x = event.clientX - 8;
+            y = event.clientY - 8;
+        }
+
+        function MouseDown() {
+            iteration++;
+            MousePosition();
+            ctx.fillStyle = "rgba(63,255,63,0.5)";
+            ctx.fillRect(Math.floor(x / 50) * 50, Math.floor(y / 50) * 50, 50, 50);
+            if (iteration === 2) {
+                drawboard();
+                iteration = 0;
+            }
+        }
+        setInterval(function() {
+            PossibleMovesfun();
+            ChooseMove();
+            if (turn === 1) {
+                turn = 0;
+            } else {
+                turn = 1;
+            }
+        }, 500)
+    </script>
+</body>
+
+</html>
