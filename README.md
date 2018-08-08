@@ -1,5 +1,5 @@
 # ChessEngine
-At the moment, the ChessEngine only knows the rlues of chess and it only makes random moves with the pieces every half a second. 
+At the moment, the ChessEngine only knows the rules of chess and it only makes random moves with the pieces every half a second. 
 The Chess Engine at the moment is able to alternate whose turn it is, whether it's white's turn to move or black's turn to move.
 Update: The Chess Engine can now perform en passant and Queen side castling and King side castling for white (fingers crossed).
 In the future the Chess Engine will be able to perform castling for black as well.
