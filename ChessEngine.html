@@ -4,6 +4,8 @@
 
 <body>
     <script>
+        var KingWhiteRookMoved = 0;
+        var QueenWhiteRookMoved = 0;
         var WhiteKingMoved = 0;
         var BlackKingMoved = 0;
         var passanttile = -1;
@@ -58,6 +60,12 @@
             positions[53] = 1;
             positions[54] = 1;
             positions[55] = 1;
+            WhiteKingMoved = 0;
+            KingWhiteRookMoved = 0;
+            QueenWhiteRookMoved = 0;
+            passanttile = -1;
+            turn = 0;
+            iteration = 0;
         }
         resetboard();
 
@@ -126,6 +134,12 @@
             for (var i = 0; i < positions.length; i++) {
                 if (turn === 0) {
                     if (positions[i] === 500) {
+                        if (positions[56] === 0 && positions[57] === 0 && positions[58] === 0 && positions[59] === 0 && WhiteKingMoved === 0 && QueenWhiteRookMoved === 0) {
+                            possiblemoves.push("WQSC");
+                        }
+                        if (positions[62] === 0 && positions[61] === 0 && WhiteKingMoved === 0 && KingWhiteRookMoved === 0) {
+                            possiblemoves.push("WKSC");
+                        }
                         if (positions[i - 8] <= 0) {
                             possiblemoves.push([i, i - 8]);
                         }
@@ -246,12 +260,12 @@
                         }
                     }
                     if (positions[i] === 3) {
-                        if (i - 17 > 0 && i % 8 != 7) {
+                        if (i - 17 > 0 && i % 8 != 0) {
                             if (positions[i - 17] <= 0) {
                                 possiblemoves.push([i, i - 17]);
                             }
                         }
-                        if (i - 15 > 0 && i % 8 != 0) {
+                        if (i - 15 > 0 && i % 8 != 7) {
                             if (positions[i - 15] <= 0) {
                                 possiblemoves.push([i, i - 15]);
                             }
@@ -526,12 +540,12 @@
                         }
                     }
                     if (positions[i] === -3) {
-                        if (i - 17 > 0 && i % 8 != 7) {
+                        if (i - 17 > 0 && i % 8 != 0) {
                             if (positions[i - 17] >= 0) {
                                 possiblemoves.push([i, i - 17]);
                             }
                         }
-                        if (i - 15 > 0 && i % 8 != 0) {
+                        if (i - 15 > 0 && i % 8 != 7) {
                             if (positions[i - 15] >= 0) {
                                 possiblemoves.push([i, i - 15]);
                             }
@@ -695,6 +709,19 @@
         function ChooseMove() {
             var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
             if (possiblemoves.length > 0) {
+                if (possiblemoves[hideousvariable] === "WKSC") {
+                    positions[61] = 5;
+                    positions[62] = 500;
+                    WhiteKingMoved = 1;
+                }
+                if (possiblemoves[hideousvariable] === "WQSC") {
+                    positions[59] = 5;
+                    positions[58] = 500;
+                    WhiteKingMoved = 1;
+                }
+                if (positions[possiblemoves[hideousvariable]] === 500) {
+                    WhiteKingMoved = 1;
+                }
                 if (possiblemoves[hideousvariable].length === 3) {
                     if (possiblemoves[hideousvariable][2] === 1) {
                         positions[possiblemoves[hideousvariable][1] - 7] = 0
@@ -711,6 +738,9 @@
                 }
                 positions[possiblemoves[hideousvariable][1]] = positions[possiblemoves[hideousvariable][0]];
                 positions[possiblemoves[hideousvariable][0]] = 0;
+                if (positions[63] != 5) {
+                    KingWhiteRookMoved = 1;
+                }
             }
             drawboard();
             possiblemoves = [];
