@@ -136,9 +136,6 @@
         drawboard();
 
         function PossibleMovesfun() {
-            if (passanttile != -1) {
-                passanttile = -1;
-            }
             for (var i = 0; i < 8; i++) {
                 if (positions[i] === 1) {
                     positions[i] = 9;
@@ -418,7 +415,6 @@
                         }
                         if (positions[i - 16] === 0 && Math.floor(i / 8) === 6 && positions[i - 8] === 0) {
                             possiblemoves.push([i, i - 16]);
-                            passanttile = i - 8;
                         }
                         if (positions[i - 7] < 0 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0) {
                             possiblemoves.push([i, i - 7]);
@@ -704,7 +700,6 @@
                         }
                         if (positions[i + 16] === 0 && Math.floor(i / 8) === 1 && positions[i + 8] === 0) {
                             possiblemoves.push([i, i + 16]);
-                            passanttile = i + 8;
                         }
                         if (positions[i + 7] > 0 && Math.abs((i % 8) - ((i + 7) % 8)) < 2 && Math.abs((i % 8) - ((i + 7) % 8)) > 0) {
                             possiblemoves.push([i, i + 7]);
@@ -795,6 +790,10 @@
                             positions[possiblemoves[hideousvariable][1] + 9] = 0
                         }
                     }
+            				if (passanttile != -1) {
+                				passanttile = -1;
+            				}
+                  	if (Math.abs(positions[possiblemoves[hideousvariable]]) === 1 && Math.abs(possiblemoves[hideousvariable][0] - possiblemoves[hideousvariable][1]) === 16) {if (positions[possiblemoves[hideousvariable][0]] > 0) {passanttile = possiblemoves[hideousvariable][0]-8;} else if (positions[possiblemoves[hideousvariable][0]] < 0) {passanttile = possiblemoves[hideousvariable][0]+8;}}
                     positions[possiblemoves[hideousvariable][1]] = positions[possiblemoves[hideousvariable][0]];
                     positions[possiblemoves[hideousvariable][0]] = 0;
                     if (positions[63] != 5) {
