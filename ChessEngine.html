@@ -788,9 +788,9 @@
                             positions[possiblemoves[hideousvariable][1] - 8] = 0
                         }
                     }
-            				//if (passanttile != -1) {
-                				//passanttile = -1;
-            				//}
+            				if (passanttile != -1) {
+                				passanttile = -1;
+            				}
                   	if (Math.abs(positions[possiblemoves[hideousvariable][0]]) === 1 && Math.abs(possiblemoves[hideousvariable][0] - possiblemoves[hideousvariable][1]) === 16) {if (positions[possiblemoves[hideousvariable][0]] > 0) {passanttile = possiblemoves[hideousvariable][1]+8;} else if (positions[possiblemoves[hideousvariable][0]] < 0) {passanttile = possiblemoves[hideousvariable][1]-8;}}
                   	console.log(passanttile);
                     positions[possiblemoves[hideousvariable][1]] = positions[possiblemoves[hideousvariable][0]];
