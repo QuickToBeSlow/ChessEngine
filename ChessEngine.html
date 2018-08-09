@@ -418,18 +418,18 @@
                         }
                         if (positions[i - 16] === 0 && Math.floor(i / 8) === 6 && positions[i - 8] === 0) {
                             possiblemoves.push([i, i - 16]);
-                            passanttile = i - 16;
+                            passanttile = i - 8;
                         }
-                        if (positions[i - 7] < 0 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0 || passanttile === i - 7) {
+                        if (positions[i - 7] < 0 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0) {
                             possiblemoves.push([i, i - 7]);
                         }
-                        if (positions[i - 9] < 0 && Math.abs((i % 8) - ((i - 9) % 8)) > 0 && Math.abs((i % 8) - ((i - 9) % 8)) < 2 || passanttile === i - 9) {
+                        if (positions[i - 9] < 0 && Math.abs((i % 8) - ((i - 9) % 8)) > 0 && Math.abs((i % 8) - ((i - 9) % 8)) < 2) {
                             possiblemoves.push([i, i - 9]);
                         }
-                        if (positions[i - 7] < 0 && passanttile === i - 7 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0) {
+                        if (passanttile === i - 7 && Math.abs((i % 8) - ((i - 7) % 8)) < 2 && Math.abs((i % 8) - ((i - 7) % 8)) > 0) {
                             possiblemoves.push([i, i - 7, 1]);
                         }
-                        if (positions[i - 9] < 0 && passanttile === i - 9 && Math.abs((i % 8) - ((i - 9) % 8)) > 0 && Math.abs((i % 8) - ((i - 9) % 8)) < 2) {
+                        if (passanttile === i - 9 && Math.abs((i % 8) - ((i - 9) % 8)) > 0 && Math.abs((i % 8) - ((i - 9) % 8)) < 2) {
                             possiblemoves.push([i, i - 9, 2]);
                         }
                     }
@@ -704,7 +704,7 @@
                         }
                         if (positions[i + 16] === 0 && Math.floor(i / 8) === 1 && positions[i + 8] === 0) {
                             possiblemoves.push([i, i + 16]);
-                            passanttile = i + 16;
+                            passanttile = i + 8;
                         }
                         if (positions[i + 7] > 0 && Math.abs((i % 8) - ((i + 7) % 8)) < 2 && Math.abs((i % 8) - ((i + 7) % 8)) > 0) {
                             possiblemoves.push([i, i + 7]);
@@ -714,10 +714,10 @@
                             possiblemoves.push([i, i + 9]);
 
                         }
-                        if (positions[i + 7] > 0 && passanttile === i + 7 && Math.abs((i % 8) - ((i + 7) % 8)) < 2 && Math.abs((i % 8) - ((i + 7) % 8)) > 0) {
+                        if (passanttile === i + 7 && Math.abs((i % 8) - ((i + 7) % 8)) < 2 && Math.abs((i % 8) - ((i + 7) % 8)) > 0) {
                             possiblemoves.push([i, i + 7, 3]);
                         }
-                        if (positions[i + 9] > 0 && passanttile === i + 9 && Math.abs((i % 8) - ((i + 9) % 8)) > 0 && Math.abs((i % 8) - ((i + 9) % 8)) < 2) {
+                        if (passanttile === i + 9 && Math.abs((i % 8) - ((i + 9) % 8)) > 0 && Math.abs((i % 8) - ((i + 9) % 8)) < 2) {
                             possiblemoves.push([i, i + 9, 4]);
                         }
                     }
