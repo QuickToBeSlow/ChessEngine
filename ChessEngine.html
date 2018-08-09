@@ -4,6 +4,9 @@
 
 <body>
     <script>
+        var IsPossibleMove = 0;
+        var PlayersMovePosition = 0;
+        var PlayersMove = [];
         var KingWhiteRookMoved = 0;
         var QueenWhiteRookMoved = 0;
         var KingBlackRookMoved = 0;
@@ -70,6 +73,7 @@
             iteration = 0;
             KingBlackRookMoved = 0;
             QueenBlackRookMoved = 0;
+            PlayersMove = [];
         }
         resetboard();
 
@@ -134,6 +138,13 @@
         function PossibleMovesfun() {
             if (passanttile != -1) {
                 passanttile = -1;
+            }
+            for (var i = 0; i < 8; i++) {
+                if (positions[i] === 1) {
+                    positions[i] = 9;
+                } else if (positions[i + 56] === -1) {
+                    positions[i + 56] = -9;
+                }
             }
             for (var i = 0; i < positions.length; i++) {
                 if (turn === 0) {
@@ -427,7 +438,7 @@
                         if (positions[1] === 0 && positions[2] === 0 && positions[3] === 0 && BlackKingMoved === 0 && QueenBlackRookMoved === 0) {
                             possiblemoves.push("BQSC");
                         }
-                        if (positions[62] === 0 && positions[61] === 0 && BlackKingMoved === 0 && KingBlackRookMoved === 0) {
+                        if (positions[5] === 0 && positions[6] === 0 && BlackKingMoved === 0 && KingBlackRookMoved === 0) {
                             possiblemoves.push("BKSC");
                         }
                         if (positions[i - 8] >= 0) {
@@ -717,61 +728,82 @@
         PossibleMovesfun();
 
         function ChooseMove() {
-            var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
-            if (possiblemoves.length > 0) {
-                if (possiblemoves[hideousvariable] === "WKSC") {
-                    positions[61] = 5;
-                    positions[62] = 500;
-                    positions[63] = 0;
-                    positions[60] = 0;
-                    WhiteKingMoved = 1;
+          	IsPossibleMove = 0;
+            var hideousvariable = null;
+            //var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
+            for (var i = 0; i < possiblemoves.length; i++) {
+                if (PlayersMove[0] === possiblemoves[i][0] && PlayersMove[1] === possiblemoves[i][1] && PlayersMove[2] === possiblemoves[i][2]) {
+                    IsPossibleMove = 1;
                 }
-                if (possiblemoves[hideousvariable] === "WQSC") {
-                    positions[59] = 5;
-                    positions[58] = 500;
-                    positions[56] = 0;
-                    positions[60] = 0;
-                    WhiteKingMoved = 1;
-                }
-                if (possiblemoves[hideousvariable] === "BQSC") {
-                    positions[3] = 5;
-                    positions[2] = 500;
-                    positions[0] = 0;
-                    positions[4] = 0;
-                    BlackKingMoved = 1;
-                }
-                if (possiblemoves[hideousvariable] === "BKSC") {
-                    positions[5] = 5;
-                    positions[6] = 500;
-                    positions[4] = 0;
-                    positions[7] = 0;
-                    BlackKingMoved = 1;
-                }
-                if (positions[possiblemoves[hideousvariable][0]] === 500) {
-                    WhiteKingMoved = 1;
-                }
-                if (possiblemoves[hideousvariable].length === 3) {
-                    if (possiblemoves[hideousvariable][2] === 1) {
-                        positions[possiblemoves[hideousvariable][1] - 7] = 0
-                    }
-                    if (possiblemoves[hideousvariable][2] === 2) {
-                        positions[possiblemoves[hideousvariable][1] - 9] = 0
-                    }
-                    if (possiblemoves[hideousvariable][2] === 3) {
-                        positions[possiblemoves[hideousvariable][1] + 7] = 0
-                    }
-                    if (possiblemoves[hideousvariable][2] === 4) {
-                        positions[possiblemoves[hideousvariable][1] + 9] = 0
-                    }
-                }
-                positions[possiblemoves[hideousvariable][1]] = positions[possiblemoves[hideousvariable][0]];
-                positions[possiblemoves[hideousvariable][0]] = 0;
-                if (positions[63] != 5) {
-                    KingWhiteRookMoved = 1;
-                }
+              console.log(PlayersMove," ",possiblemoves[i]);
             }
-            drawboard();
-            possiblemoves = [];
+            if (PlayersMove.length > 1 && IsPossibleMove === 1) {
+              	hideousvariable = -1;
+                possiblemoves[hideousvariable] = PlayersMove;
+              	console.log(possiblemoves[hideousvariable]);
+            }
+            if (hideousvariable != null) {
+								if (turn === 1) {
+                    turn = 0;
+                } else {
+                    turn = 1;
+                }
+                console.log(hideousvariable);
+                if (possiblemoves.length > 0) {
+                    if (possiblemoves[hideousvariable] === "WKSC") {
+                        positions[61] = 5;
+                        positions[62] = 500;
+                        positions[63] = 0;
+                        positions[60] = 0;
+                        WhiteKingMoved = 1;
+                    }
+                    if (possiblemoves[hideousvariable] === "WQSC") {
+                        positions[59] = 5;
+                        positions[58] = 500;
+                        positions[56] = 0;
+                        positions[60] = 0;
+                        WhiteKingMoved = 1;
+                    }
+                    if (possiblemoves[hideousvariable] === "BQSC") {
+                        positions[3] = -5;
+                        positions[2] = -500;
+                        positions[0] = 0;
+                        positions[4] = 0;
+                        BlackKingMoved = 1;
+                    }
+                    if (possiblemoves[hideousvariable] === "BKSC") {
+                        positions[5] = -5;
+                        positions[6] = -500;
+                        positions[4] = 0;
+                        positions[7] = 0;
+                        BlackKingMoved = 1;
+                    }
+                    if (positions[possiblemoves[hideousvariable][0]] === 500) {
+                        WhiteKingMoved = 1;
+                    }
+                    if (possiblemoves[hideousvariable].length === 3) {
+                        if (possiblemoves[hideousvariable][2] === 1) {
+                            positions[possiblemoves[hideousvariable][1] - 7] = 0
+                        }
+                        if (possiblemoves[hideousvariable][2] === 2) {
+                            positions[possiblemoves[hideousvariable][1] - 9] = 0
+                        }
+                        if (possiblemoves[hideousvariable][2] === 3) {
+                            positions[possiblemoves[hideousvariable][1] + 7] = 0
+                        }
+                        if (possiblemoves[hideousvariable][2] === 4) {
+                            positions[possiblemoves[hideousvariable][1] + 9] = 0
+                        }
+                    }
+                    positions[possiblemoves[hideousvariable][1]] = positions[possiblemoves[hideousvariable][0]];
+                    positions[possiblemoves[hideousvariable][0]] = 0;
+                    if (positions[63] != 5) {
+                        KingWhiteRookMoved = 1;
+                    }
+                }
+                drawboard();
+                possiblemoves = [];
+            }
         }
 
         function MousePosition(event) {
@@ -781,24 +813,45 @@
         }
 
         function MouseDown() {
+            PossibleMovesfun();
             iteration++;
             MousePosition();
             ctx.fillStyle = "rgba(63,255,63,0.5)";
             ctx.fillRect(Math.floor(x / 50) * 50, Math.floor(y / 50) * 50, 50, 50);
+            PlayersMove.push(Math.floor((x / 50)) + Math.floor((y / 50)) * 8);
+
             if (iteration === 2) {
+                if (PlayersMove[0] === 60 && PlayersMove[1] === 62) {
+                    PlayersMove = "WKSC";
+                }
+                if (PlayersMove[0] === 60 && PlayersMove[1] === 58) {
+                    PlayersMove = "WQSC";
+                }
+                if (PlayersMove[0] === 4 && PlayersMove[1] === 6) {
+                    PlayersMove = "BKSC";
+                }
+                if (PlayersMove[0] === 4 && PlayersMove[1] === 2) {
+                    PlayersMove = "BQSC";
+                }
+                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 7)) {
+                    PlayersMove = [PlayersMove[0], PlayersMove[1], 1];
+                }
+                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 9)) {
+                    PlayersMove = [PlayersMove[0], PlayersMove[1], 2];
+                }
+                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 7)) {
+                    PlayersMove = [PlayersMove[0], PlayersMove[1], 3];
+                }
+                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 9)) {
+                    PlayersMove = [PlayersMove[0], PlayersMove[1], 4];
+                }
+                ChooseMove();
+                console.log(PlayersMove);
+                PlayersMove = [];
                 drawboard();
                 iteration = 0;
             }
         }
-        setInterval(function() {
-            PossibleMovesfun();
-            ChooseMove();
-            if (turn === 1) {
-                turn = 0;
-            } else {
-                turn = 1;
-            }
-        }, 500)
     </script>
 </body>
 
