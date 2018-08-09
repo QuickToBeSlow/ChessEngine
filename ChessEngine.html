@@ -735,7 +735,6 @@
             if (PlayersMove.length > 1 && IsPossibleMove === 1) {
               	hideousvariable = -1;
                 possiblemoves[hideousvariable] = PlayersMove;
-              	console.log(possiblemoves[hideousvariable]);
             }
             if (hideousvariable != null) {
 								if (turn === 1) {
@@ -743,7 +742,6 @@
                 } else {
                     turn = 1;
                 }
-                console.log(hideousvariable);
                 if (possiblemoves.length > 0) {
                     if (possiblemoves[hideousvariable] === "WKSC") {
                         positions[61] = 5;
@@ -790,10 +788,11 @@
                             positions[possiblemoves[hideousvariable][1] + 9] = 0
                         }
                     }
-            				if (passanttile != -1) {
-                				passanttile = -1;
-            				}
-                  	if (Math.abs(positions[possiblemoves[hideousvariable]]) === 1 && Math.abs(possiblemoves[hideousvariable][0] - possiblemoves[hideousvariable][1]) === 16) {if (positions[possiblemoves[hideousvariable][0]] > 0) {passanttile = possiblemoves[hideousvariable][0]-8;} else if (positions[possiblemoves[hideousvariable][0]] < 0) {passanttile = possiblemoves[hideousvariable][0]+8;}}
+            				//if (passanttile != -1) {
+                				//passanttile = -1;
+            				//}
+                  	if (Math.abs(positions[possiblemoves[hideousvariable][0]]) === 1 && Math.abs(possiblemoves[hideousvariable][0] - possiblemoves[hideousvariable][1]) === 16) {if (positions[possiblemoves[hideousvariable][0]] > 0) {passanttile = possiblemoves[hideousvariable][1]+8;} else if (positions[possiblemoves[hideousvariable][0]] < 0) {passanttile = possiblemoves[hideousvariable][1]-8;}}
+                  	console.log(passanttile);
                     positions[possiblemoves[hideousvariable][1]] = positions[possiblemoves[hideousvariable][0]];
                     positions[possiblemoves[hideousvariable][0]] = 0;
                     if (positions[63] != 5) {
@@ -833,19 +832,18 @@
                     PlayersMove = "BQSC";
                 }
                 if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 7)) {
-                    PlayersMove = [PlayersMove[0], PlayersMove[1], 1];
-                }
-                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 9)) {
-                    PlayersMove = [PlayersMove[0], PlayersMove[1], 2];
-                }
-                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 7)) {
                     PlayersMove = [PlayersMove[0], PlayersMove[1], 3];
                 }
-                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 9)) {
+                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 9)) {
                     PlayersMove = [PlayersMove[0], PlayersMove[1], 4];
                 }
+                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 7)) {
+                    PlayersMove = [PlayersMove[0], PlayersMove[1], 1];
+                }
+                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 9)) {
+                    PlayersMove = [PlayersMove[0], PlayersMove[1], 2];
+                }
                 ChooseMove();
-                console.log(PlayersMove);
                 PlayersMove = [];
                 drawboard();
                 iteration = 0;
