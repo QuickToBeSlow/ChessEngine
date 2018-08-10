@@ -512,7 +512,7 @@
                             }
                             if (positions[i + j] === 0 && j != null) {
                                 possiblemoves.push([i, i + j]);
-                            } else if (j != null && positions[i - j] > 0) {
+                            } else if (j != null && positions[i + j] > 0) {
                                 possiblemoves.push([i, i + j]);
                                 j = 72;
                             } else if (j != null && positions[i + j] < 0) {
@@ -660,7 +660,7 @@
                             }
                             if (positions[i + j] === 0 && j != null) {
                                 possiblemoves.push([i, i + j]);
-                            } else if (j != null && positions[i - j] > 0) {
+                            } else if (j != null && positions[i + j] > 0) {
                                 possiblemoves.push([i, i + j]);
                                 j = 72;
                             } else if (j != null && positions[i + j] < 0) {
