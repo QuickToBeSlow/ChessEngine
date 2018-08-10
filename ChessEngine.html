@@ -790,10 +790,9 @@
                 } else {
                     turn = 1;
                 }
-                if (positions[possiblemoves[hideousvariable][1]] === 500) {
-                    resetboard();
-                }
                 if (positions[possiblemoves[hideousvariable][1]] === -500) {
+                    resetboard();
+                } else if (positions[possiblemoves[hideousvariable][1]] === 500) {
                     resetboard();
                 }
                 if (possiblemoves.length > 0) {
