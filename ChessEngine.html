@@ -778,7 +778,7 @@
                 if (PlayersMove[0] === possiblemoves[i][0] && PlayersMove[1] === possiblemoves[i][1] && PlayersMove[2] === possiblemoves[i][2]) {
                     IsPossibleMove = 1;
                 }
-                console.log(PlayersMove, " ", possiblemoves[i]);
+                //console.log(PlayersMove, " ", possiblemoves[i]);
             }
             if (PlayersMove.length > 1 && IsPossibleMove === 1) {
                 hideousvariable = -1;
@@ -845,7 +845,7 @@
                     if (passanttile != -1) {
                         passanttile = -1;
                     }
-                    console.log(positions[possiblemoves[hideousvariable][1]]);
+                    //console.log(positions[possiblemoves[hideousvariable][1]]);
                     if (Math.abs(positions[possiblemoves[hideousvariable][0]]) === 1 && Math.abs(possiblemoves[hideousvariable][0] - possiblemoves[hideousvariable][1]) === 16) {
                         if (positions[possiblemoves[hideousvariable][0]] > 0) {
                             passanttile = possiblemoves[hideousvariable][1] + 8;
