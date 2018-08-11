@@ -771,35 +771,40 @@
         PossibleMovesfun();
 
         function ChooseMove() {
-          	var bestmoves = [];
-          	var bestmove = null;
+            PossibleMovesfun();
+            var bestmoves = [];
             IsPossibleMove = 0;
-						var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
-          if (turn === 1) {
-          	console.log(possiblemoves.length);
-            for (var j = 1; j < possiblemoves.length-1; j++) {
-              if (Math.abs(positions[possiblemoves[j][1]]) > Math.abs(positions[possiblemoves[j-1][1]])) {
-                bestmoves.push(possiblemoves[j-1]);
-							} else if (Math.abs(positions[possiblemoves[j][1]]) < Math.abs(positions[possiblemoves[j-1][1]])) {bestmoves.push(possiblemoves[j-1]);}
-            }
-            if (bestmoves.length > 0) {
-            possiblemoves = bestmoves;
-            }
-          	console.log(possiblemoves.length);
             var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
-          }
+            if (turn === 1) {
+                console.log(possiblemoves.length);
+                for (var j = 1; j < possiblemoves.length - 1; j++) {
+                    if (Math.abs(positions[possiblemoves[j][1]]) > Math.abs(positions[possiblemoves[j - 1][1]])) {
+                        bestmoves.push(possiblemoves[j - 1]);
+                    }
+                    if (Math.abs(positions[possiblemoves[j][1]]) < Math.abs(positions[possiblemoves[j - 1][1]])) {
+                        bestmoves.push(possiblemoves[j - 1]);
+                    }
+                }
+                if (bestmoves.length > 0) {
+                    possiblemoves = bestmoves;
+                }
+                console.log(possiblemoves.length);
+                var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
+            }
             if (turn === 0) {
-            for (var i = 0; i < possiblemoves.length; i++) {
-                if (PlayersMove[0] === possiblemoves[i][0] && PlayersMove[1] === possiblemoves[i][1] && PlayersMove[2] === possiblemoves[i][2]) {
-                    IsPossibleMove = 1;
-                } else {hideousvariable = null;}
-                //console.log(PlayersMove, " ", possiblemoves[i]);
+                for (var i = 0; i < possiblemoves.length; i++) {
+                    if (PlayersMove[0] === possiblemoves[i][0] && PlayersMove[1] === possiblemoves[i][1] && PlayersMove[2] === possiblemoves[i][2]) {
+                        IsPossibleMove = 1;
+                    } else {
+                        hideousvariable = null;
+                    }
+                    //console.log(PlayersMove, " ", possiblemoves[i]);
+                }
+                if (PlayersMove.length > 1 && IsPossibleMove === 1) {
+                    hideousvariable = -1;
+                    possiblemoves[hideousvariable] = PlayersMove;
+                }
             }
-            if (PlayersMove.length > 1 && IsPossibleMove === 1) {
-                hideousvariable = -1;
-                possiblemoves[hideousvariable] = PlayersMove;
-            }
-           }
             if (hideousvariable != null) {
                 if (turn === 1) {
                     turn = 0;
@@ -898,53 +903,52 @@
         }
 
         function MouseDown() {
-          	if (turn === 0) {
-            PossibleMovesfun();
-            iteration++;
-            MousePosition();
-            ctx.fillStyle = "rgba(63,255,63,0.5)";
-            ctx.fillRect(Math.floor(x / 50) * 50, Math.floor(y / 50) * 50, 50, 50);
-            PlayersMove.push(Math.floor((x / 50)) + Math.floor((y / 50)) * 8);
+            if (turn === 0) {
+                PossibleMovesfun();
+                iteration++;
+                MousePosition();
+                ctx.fillStyle = "rgba(63,255,63,0.5)";
+                ctx.fillRect(Math.floor(x / 50) * 50, Math.floor(y / 50) * 50, 50, 50);
+                PlayersMove.push(Math.floor((x / 50)) + Math.floor((y / 50)) * 8);
 
-            if (iteration === 2) {
-                if (PlayersMove[0] === 60 && PlayersMove[1] === 62) {
-                    PlayersMove = "WKSC";
+                if (iteration === 2) {
+                    if (PlayersMove[0] === 60 && PlayersMove[1] === 62) {
+                        PlayersMove = "WKSC";
+                    }
+                    if (PlayersMove[0] === 60 && PlayersMove[1] === 58) {
+                        PlayersMove = "WQSC";
+                    }
+                    if (PlayersMove[0] === 4 && PlayersMove[1] === 6) {
+                        PlayersMove = "BKSC";
+                    }
+                    if (PlayersMove[0] === 4 && PlayersMove[1] === 2) {
+                        PlayersMove = "BQSC";
+                    }
+                    if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 7)) {
+                        PlayersMove = [PlayersMove[0], PlayersMove[1], 3];
+                    }
+                    if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 9)) {
+                        PlayersMove = [PlayersMove[0], PlayersMove[1], 4];
+                    }
+                    if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 7)) {
+                        PlayersMove = [PlayersMove[0], PlayersMove[1], 1];
+                    }
+                    if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 9)) {
+                        PlayersMove = [PlayersMove[0], PlayersMove[1], 2];
+                    }
+                    ChooseMove();
+                    PlayersMove = [];
+                    drawboard();
+                    iteration = 0;
                 }
-                if (PlayersMove[0] === 60 && PlayersMove[1] === 58) {
-                    PlayersMove = "WQSC";
-                }
-                if (PlayersMove[0] === 4 && PlayersMove[1] === 6) {
-                    PlayersMove = "BKSC";
-                }
-                if (PlayersMove[0] === 4 && PlayersMove[1] === 2) {
-                    PlayersMove = "BQSC";
-                }
-                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 7)) {
-                    PlayersMove = [PlayersMove[0], PlayersMove[1], 3];
-                }
-                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] - 9)) {
-                    PlayersMove = [PlayersMove[0], PlayersMove[1], 4];
-                }
-                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 7)) {
-                    PlayersMove = [PlayersMove[0], PlayersMove[1], 1];
-                }
-                if (PlayersMove[1] === passanttile && PlayersMove[0] === (PlayersMove[1] + 9)) {
-                    PlayersMove = [PlayersMove[0], PlayersMove[1], 2];
-                }
+            }
+        }
+        setInterval(function() {
+            //console.log(turn);
+            if (turn === 1) {
                 ChooseMove();
-                PlayersMove = [];
-                drawboard();
-                iteration = 0;
             }
-            }
-        }
-      setInterval(function() {
-        //console.log(turn);
-      	if (turn === 1) {
-          PossibleMovesfun();
-      		ChooseMove();
-        }
-      }, 100)
+        }, 100)
     </script>
 </body>
 
