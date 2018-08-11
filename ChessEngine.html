@@ -771,19 +771,35 @@
         PossibleMovesfun();
 
         function ChooseMove() {
+          	var bestmoves = [];
+          	var bestmove = null;
             IsPossibleMove = 0;
-            var hideousvariable = null;
-            //var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
+						var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
+          if (turn === 1) {
+          	console.log(possiblemoves.length);
+            for (var j = 1; j < possiblemoves.length-1; j++) {
+              if (Math.abs(positions[possiblemoves[j][1]]) > Math.abs(positions[possiblemoves[j-1][1]])) {
+                bestmoves.push(possiblemoves[j-1]);
+							} else if (Math.abs(positions[possiblemoves[j][1]]) < Math.abs(positions[possiblemoves[j-1][1]])) {bestmoves.push(possiblemoves[j-1]);}
+            }
+            if (bestmoves.length > 0) {
+            possiblemoves = bestmoves;
+            }
+          	console.log(possiblemoves.length);
+            var hideousvariable = Math.round(Math.random() * (possiblemoves.length - 1));
+          }
+            if (turn === 0) {
             for (var i = 0; i < possiblemoves.length; i++) {
                 if (PlayersMove[0] === possiblemoves[i][0] && PlayersMove[1] === possiblemoves[i][1] && PlayersMove[2] === possiblemoves[i][2]) {
                     IsPossibleMove = 1;
-                }
+                } else {hideousvariable = null;}
                 //console.log(PlayersMove, " ", possiblemoves[i]);
             }
             if (PlayersMove.length > 1 && IsPossibleMove === 1) {
                 hideousvariable = -1;
                 possiblemoves[hideousvariable] = PlayersMove;
             }
+           }
             if (hideousvariable != null) {
                 if (turn === 1) {
                     turn = 0;
@@ -827,6 +843,9 @@
                     if (positions[possiblemoves[hideousvariable][0]] === 500) {
                         WhiteKingMoved = 1;
                     }
+                    if (positions[possiblemoves[hideousvariable][0]] === -500) {
+                        BlackKingMoved = 1;
+                    }
                     if (possiblemoves[hideousvariable].length === 3) {
                         if (possiblemoves[hideousvariable][2] === 1) {
                             positions[possiblemoves[hideousvariable][1] + 8] = 0
@@ -857,6 +876,15 @@
                     if (positions[63] != 5) {
                         KingWhiteRookMoved = 1;
                     }
+                    if (positions[56] != 5) {
+                        QueenWhiteRookMoved = 1;
+                    }
+                    if (positions[0] != -5) {
+                        QueenBlackRookMoved = 1;
+                    }
+                    if (positions[7] != -5) {
+                        KingBlackRookMoved = 1;
+                    }
                 }
                 drawboard();
                 possiblemoves = [];
@@ -870,6 +898,7 @@
         }
 
         function MouseDown() {
+          	if (turn === 0) {
             PossibleMovesfun();
             iteration++;
             MousePosition();
@@ -907,7 +936,15 @@
                 drawboard();
                 iteration = 0;
             }
+            }
         }
+      setInterval(function() {
+        //console.log(turn);
+      	if (turn === 1) {
+          PossibleMovesfun();
+      		ChooseMove();
+        }
+      }, 100)
     </script>
 </body>
 
