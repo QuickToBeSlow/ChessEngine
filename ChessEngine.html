@@ -778,11 +778,11 @@
             if (turn === 1) {
                 console.log(possiblemoves.length);
                 for (var j = 1; j < possiblemoves.length - 1; j++) {
-                    if (Math.abs(positions[possiblemoves[j][1]]) > Math.abs(positions[possiblemoves[j - 1][1]])) {
-                        bestmoves.push(possiblemoves[j - 1]);
-                    }
                     if (Math.abs(positions[possiblemoves[j][1]]) < Math.abs(positions[possiblemoves[j - 1][1]])) {
                         bestmoves.push(possiblemoves[j - 1]);
+                    }
+                    if (Math.abs(positions[possiblemoves[j][1]]) > Math.abs(positions[possiblemoves[j - 1][1]])) {
+                        bestmoves.push(possiblemoves[j]);
                     }
                 }
                 if (bestmoves.length > 0) {
